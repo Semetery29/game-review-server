@@ -10,8 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // mongo operator
-const uri =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jwiw1ls.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jwiw1ls.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,10 +26,13 @@ async function run() {
     await client.connect();
 
     // Collection and DB name
-
+    const topCollection = client.db("reviewDB").collection("top");
 
     // CRUD Command here
-    
+    app.get("/top", async (req, res) => {
+      const result = await topCollection.find().toArray();
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
